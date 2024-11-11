@@ -22,14 +22,33 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast";
 import { v4 as uuidv4 } from "uuid";
 import { Skeleton } from "@/components/ui/skeleton";
-
+import Image from "next/image";
+const imageList = ["/hinh1.png", "/hinh2.png", "/hinh3.png", "/hinh4.png"];
 export default function Home() {
   const [result, setResult] = useState<boolean[]>([]);
   const [showResult, setShowResult] = useState(false);
+  const [openDialog, setOpenDialog] = useState(true);
   const { toast } = useToast();
   const [questionState, setQuestionState] = useState([
     ...questions,
@@ -100,58 +119,92 @@ export default function Home() {
   }
 
   return (
-    <div className="py-20 flex flex-col gap-10 max-w-[1280px] mx-auto">
-      {/* <Countdown date={Date.now() + 5000} onComplete={(value) => {
-        if (value.completed) {
-          handleComplete()
-        }
-      }} /> */}
-      {questionState.map((question, index) => {
-        return (
-          <div className="flex-1 flex gap-5" key={index}>
-            <div className="w-[100px]">
-              <h2>Câu hỏi {index + 1}</h2>
-              <p className={`${showResult ? "text-red-500" : "hidden"}`}>
-                {result[index] ? "" : "Sai"}
-              </p>
-            </div>
-            <RadioGroup
-              className="p-2 shadow rounded flex-1 bg-gray-300"
-              onValueChange={(value) => {
-                const response = [...result];
-                if (value === "true") {
-                  response[index] = true;
-                } else {
-                  response[index] = false;
-                }
-                setResult(response);
-              }}
-            >
-              <h3>{question.label}</h3>
-              {question.answers.map((answer, childIndex) => {
-                const uniqueId = uuidv4();
-                return (
-                  <div key={childIndex} className="flex items-center space-x-2">
-                    <RadioGroupItem
-                      value={
-                        answer.isTrue
-                          ? String(answer.isTrue)
-                          : `false${childIndex}`
-                      }
-                      id={`option-${uniqueId}`}
-                    />
-                    <Label
-                      htmlFor={`option-${uniqueId}`}
-                      className={`${
-                        showResult && answer.isTrue ? "text-rose-500" : ""
-                      }`}
+    <>
+      <div
+        className="py-20 flex flex-col gap-10 max-w-[1280px] mx-auto"
+        // style={{
+        //   backgroundImage: `url(${bg.src})`,
+        //   width: "100%",
+        //   height: "100%",
+        // }}
+      >
+        <Dialog open={openDialog}>
+          <DialogContent className="flex flex-col justify-center items-center">
+            <DialogHeader>
+              <DialogTitle>Bạn phải lướt hết hình mới tắt được!!</DialogTitle>
+            </DialogHeader>
+            <Carousel className="w-full max-w-xs">
+              <CarouselContent>
+                {imageList.map((item, index) => (
+                  <CarouselItem key={index}>
+                    <div className="p-1">
+                      <Card>
+                        <CardContent className="flex aspect-square items-center justify-center p-6 flex-col gap-2">
+                          <Image src={`/hinh${index+1}.png`} alt="" width={200} height={200} />
+                          {index + 1 === imageList.length && <Button onClick={() => {
+                            setOpenDialog(false)
+                          }}>Close</Button>}
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </DialogContent>
+        </Dialog>
+
+        {questionState.map((question, index) => {
+          return (
+            <div className="flex-1 flex gap-5" key={index}>
+              <div className="w-[100px]">
+                <h2>Câu hỏi {index + 1}</h2>
+                <p className={`${showResult ? "text-red-500" : "hidden"}`}>
+                  {result[index] ? "" : "Sai"}
+                </p>
+              </div>
+              <RadioGroup
+                className="p-2 shadow rounded flex-1 bg-gray-300"
+                onValueChange={(value) => {
+                  const response = [...result];
+                  if (value === "true") {
+                    response[index] = true;
+                  } else {
+                    response[index] = false;
+                  }
+                  setResult(response);
+                }}
+              >
+                <h3>{question.label}</h3>
+                {question.answers.map((answer, childIndex) => {
+                  const uniqueId = uuidv4();
+                  return (
+                    <div
+                      key={childIndex}
+                      className="flex items-center space-x-2"
                     >
-                      {answer.label}
-                    </Label>
-                  </div>
-                );
-              })}
-              {/* {question.answers.map((answer, childIndex) => {
+                      <RadioGroupItem
+                        value={
+                          answer.isTrue
+                            ? String(answer.isTrue)
+                            : `false${childIndex}`
+                        }
+                        id={`option-${uniqueId}`}
+                      />
+                      <Label
+                        htmlFor={`option-${uniqueId}`}
+                        className={`${
+                          showResult && answer.isTrue ? "text-rose-500" : ""
+                        }`}
+                      >
+                        {answer.label}
+                      </Label>
+                    </div>
+                  );
+                })}
+                {/* {question.answers.map((answer, childIndex) => {
                 return (
                   <div key={childIndex} className="flex items-center space-x-2">
                     <RadioGroupItem
@@ -173,44 +226,43 @@ export default function Home() {
                   </div>
                 );
               })} */}
-            </RadioGroup>
-          </div>
-        );
-      })}
-      <div className="flex justify-center gap-3">
-        <AlertDialog>
-          {/* <Button className="w-fit"> */}
-          <AlertDialogTrigger asChild>
-            <Button>Submit</Button>
-          </AlertDialogTrigger>
-          {/* </Button> */}
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>
-                Bạn có chắc muốn nộp bài không?
-              </AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={() => {
-                  handleComplete();
-                }}
-              >
-                Confirm
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-        <Button>Reset</Button>
+              </RadioGroup>
+            </div>
+          );
+        })}
+        <div className="flex justify-center gap-3">
+          <AlertDialog>
+            {/* <Button className="w-fit"> */}
+            <AlertDialogTrigger asChild>
+              <Button>Submit</Button>
+            </AlertDialogTrigger>
+            {/* </Button> */}
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Bạn có chắc muốn nộp bài không?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete
+                  your account and remove your data from our servers.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => {
+                    handleComplete();
+                  }}
+                >
+                  Confirm
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+          <Button>Reset</Button>
+        </div>
+        <Toaster />
       </div>
-      <Toaster />
-    </div>
+    </>
   );
 }
-
-
