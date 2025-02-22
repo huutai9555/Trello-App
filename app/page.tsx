@@ -25,10 +25,8 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -64,6 +62,8 @@ export default function Home() {
     const resopnse: boolean[] = [];
     // const cloneQuestionState = cloneDeep(questionState)
     questionState.forEach((question, index) => {
+      console.log(question)
+      console.log(index)
       resopnse.push(false);
     });
     setResult(resopnse);
@@ -92,13 +92,14 @@ export default function Home() {
     setShowResult(true);
   };
 
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
   function shuffle(array: any[]) {
     let currentIndex = array.length;
 
     // While there remain elements to shuffle...
     while (currentIndex != 0) {
       // Pick a remaining element...
-      let randomIndex = Math.floor(Math.random() * currentIndex);
+      const randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex--;
 
       // And swap it with the current element.
@@ -120,7 +121,7 @@ export default function Home() {
 
   return (
     <>
-      
+
       <div
         className="py-20 flex flex-col gap-10 max-w-[1280px] mx-auto"
         // style={{

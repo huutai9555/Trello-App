@@ -8,6 +8,7 @@ export default function MetronomeApp() {
 
   const [secondsLeft, setSecondsLeft] = useState(30); // Thời gian đếm ngược
   const [isRunning, setIsRunning] = useState(false); // Trạng thái chạy/dừng
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
   const intervalRef = useRef<any>(null); // Tham chiếu cho setInterval
   const toneTransportStarted = useRef(false); // Đảm bảo Tone.Transport chỉ start 1 lần
 
