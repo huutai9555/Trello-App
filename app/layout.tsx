@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
+import { cookies } from "next/headers";
 
 const roboto = Roboto({
   weight: ["400", "100", "300", "500", "700"],
@@ -17,9 +18,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const data = cookies();
+  const hh = data.get("hahaha")
+  console.log(hh)
   return (
     <html lang="en">
-      <body className={`${roboto.className}`}>{children}</body>
+      <body className={`${roboto.className}`}>
+        {children}
+        </body>
     </html>
   );
 }

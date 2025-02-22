@@ -48,7 +48,7 @@ const imageList = ["/hinh1.png", "/hinh2.png", "/hinh3.png", "/hinh4.png"];
 export default function Home() {
   const [result, setResult] = useState<boolean[]>([]);
   const [showResult, setShowResult] = useState(false);
-  const [openDialog, setOpenDialog] = useState(true);
+  const [openDialog, setOpenDialog] = useState(false);
   const { toast } = useToast();
   const [questionState, setQuestionState] = useState([
     ...questions,
@@ -120,6 +120,7 @@ export default function Home() {
 
   return (
     <>
+      
       <div
         className="py-20 flex flex-col gap-10 max-w-[1280px] mx-auto"
         // style={{
